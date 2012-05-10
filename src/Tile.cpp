@@ -16,17 +16,17 @@
 // You should have received a copy of the GNU General Public License    //
 // along with NoLifeStory.  If not, see <http://www.gnu.org/licenses/>. //
 //////////////////////////////////////////////////////////////////////////
+#include "Global.h"
 
 namespace NLS {
-    class Sprite {
-    public:
-        class Data;
-        static void Create(MapFile&, class Node, uint32_t);
-        static vector<Sprite> All;
-        static void Init();
-        static void Unload();
-        void Draw(double x, double y);
-    private:
-        Data* data;
-    };
+    Tile::Tile(Node n, string type) {
+        Node tn = Base["Map"]["Tile"][type][n["u"]][n["no"]];
+        spr = tn;
+        x = n["x"];
+        y = n["y"];
+        z = tn["z"];
+    }
+    void Tile::Draw() {
+        spr.Draw(x, y);
+    }
 }

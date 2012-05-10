@@ -23,8 +23,9 @@ namespace NLS {
         sf::TcpSocket LoginSocket;
         void Init() {
             LoginSocket.setBlocking(true);
-            //sf::Socket::Status err = LoginSocket.connect("83.80.148.175", 8484, sf::seconds(2));
-            sf::Socket::Status err = LoginSocket.connect("96.11.243.156", 8484, sf::seconds(2));
+            //Diamonds 83.80.148.175
+            //Rice 96.11.243.156
+            sf::Socket::Status err = LoginSocket.connect("96.11.243.156", 8484, sf::seconds(1));
             switch (err) {
             case sf::Socket::Status::Done:
                 cout << "Connected" << endl;

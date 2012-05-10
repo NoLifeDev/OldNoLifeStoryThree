@@ -73,6 +73,9 @@ namespace NLS {
     Node Node::operator[] (int key) const {
         return operator[](to_string((long long)key).c_str());
     }
+    Node Node::operator[] (const Node& key) const {
+        return operator[]((string)key);
+    }
     Node Node::g(char* key, int n) {
         data->children[n].name = key;
         data->children[n].parent = this->data;
@@ -92,7 +95,7 @@ namespace NLS {
         data = other.data;
     }
     Node::operator bool() const {
-        return data == nullptr;
+        return !!data;
     }
     Node::operator string() const {
         if (!data) return string();
@@ -118,6 +121,11 @@ namespace NLS {
         if (data->type == Data::ireal) return data->value.ireal;
         else if (data->type == Data::dreal) return (int)data->value.dreal;
         else return 0;
+    }
+    Node::operator Sprite() const {
+        if (!data) return Sprite();
+        if (data->type == Data::png) return data->value.png;
+        else return Sprite();
     }
     /*Node::operator Sprite() const {
     if (!data) return Sprite();
@@ -181,7 +189,8 @@ namespace NLS {
             if (nn) data = nn.data;
         } else {
 			for (Node n = begin(); n != end(); ++n) {
-                n.Resolve();
+                Node nn = n;
+                nn.Resolve();
             }
         }
     }

@@ -16,17 +16,31 @@
 // You should have received a copy of the GNU General Public License    //
 // along with NoLifeStory.  If not, see <http://www.gnu.org/licenses/>. //
 //////////////////////////////////////////////////////////////////////////
+#include "Global.h"
 
 namespace NLS {
-    class Sprite {
-    public:
-        class Data;
-        static void Create(MapFile&, class Node, uint32_t);
-        static vector<Sprite> All;
-        static void Init();
-        static void Unload();
-        void Draw(double x, double y);
-    private:
-        Data* data;
-    };
+    void AniSprite::operator=(const Node& other) {
+        n = other;
+        frame = 0;
+        delay = 0;
+    }
+    void AniSprite::Draw(double x, double y) {
+        Node fn = n[frame];
+        delay += Time::Delta*1000;
+        double d = fn["delay"];
+        if (!d) d = 100;
+        if (delay > d) {
+            ++frame;
+            delay -= d;
+            fn = n[frame];
+            if (!fn) {
+                frame = 0;
+                fn = n[frame];
+            }
+            d = fn["delay"];
+            if (!d) d = 100;
+        }
+        Sprite s = fn;
+        s.Draw(x, y);
+    }
 }

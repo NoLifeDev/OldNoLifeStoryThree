@@ -20,6 +20,7 @@
 
 namespace NLS {
     vector<Sprite> Sprite::All;
+    vector<Sprite::Data*> Loaded;
     class Sprite::Data {
     public:
         void Parse() {
@@ -86,6 +87,7 @@ namespace NLS {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
             file.Unmap();
+            Loaded.push_back(this);
         }
 		GLuint texture;
 		int32_t width;
@@ -98,6 +100,13 @@ namespace NLS {
         MapFile file;
         uint8_t format2;
     };
+    void Sprite::Unload() {
+        for (Data* d : Loaded) {
+            glDeleteTextures(1, &d->texture);
+            d->texture = 0;
+        }
+        Loaded.clear();
+    }
     void Sprite::Create(MapFile& file, Node n, uint32_t off) {
         Data* data = new Data();
         data->texture = 0;
@@ -130,8 +139,6 @@ namespace NLS {
         glTexCoordPointer(2, GL_SHORT, 0, 0);
         glDrawArrays(GL_QUADS, 0, 4);
         glPopMatrix();
-        glDeleteTextures(1, &data->texture);
-        data->texture = 0;
     }
     void Sprite::Init() {
         glGenBuffers(1, &vbo);

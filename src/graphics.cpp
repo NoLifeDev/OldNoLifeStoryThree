@@ -45,6 +45,8 @@ namespace NLS {
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glEnable(GL_VERTEX_ARRAY);
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            //glEnable(GL_COLOR_LOGIC_OP);
+            //glLogicOp(GL_XOR);
             Sprite::Init();
         }
         void Loop() {
@@ -65,30 +67,21 @@ namespace NLS {
                     break;
                 }
             }
-            {
-                static mt19937 engine;
-                uniform_real_distribution<float> dist;
-                double d = Time::Total*2.08;
-                double df = floor(d);
-                double dif = d-df;
-                dif = 6*pow(dif, 7)-7*pow(dif, 6)+1;
-                engine.seed(df);
-                float r = dist(engine)*(dif);
-                float g = dist(engine)*(dif);
-                float b = dist(engine)*(dif);
-                engine.seed(df+1);
-                r += dist(engine)*(1-dif);
-                g += dist(engine)*(1-dif);
-                b += dist(engine)*(1-dif);
-                glClearColor(r, g, b, 1);
-            }
-            glClear(GL_COLOR_BUFFER_BIT);
-            glColor4f(1, 1, 1, 1);
-            Sprite s = Sprite::All.back();
-            Sprite::All.pop_back();
-            s.Draw(400, 300);
-            if (Sprite::All.empty()) Game::Over = true;
             Window->display();
+            glColor4f(1, 1, 1, 1);
+            //{
+            //    static mt19937 engine;
+            //    static uniform_real_distribution<double> dist(0, 0.6);
+            //    double d = Time::Total*2.08;
+            //    engine.seed(d);
+            //    double r = dist(engine);
+            //    double g = dist(engine);
+            //    double b = dist(engine);
+            //    glClearColor(r, g, b, 1);
+            //    glColor4f(1-r, 1-g, 1-b, 1);
+            //}
+            glClear(GL_COLOR_BUFFER_BIT);
+            View::Update();
         }
     }
 }

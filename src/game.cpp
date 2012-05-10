@@ -24,16 +24,19 @@ namespace NLS {
         void Init() {
             Network::Init();
             Graphics::Init();
-            WZ::AddPath("C:/Nexon/MapleBeta 40");
-            WZ::Init(false);
+            WZ::AddPath("");
+            WZ::AddPath("C:/Nexon/MapleStory");
+            WZ::Init(true);
+            Map::Init();
             Time::Init();
         }
         void Loop() {
             Time::Loop();
             Graphics::Loop();
+            Map::Loop();
         }
         void Unload() {
-
+            cout << "NoLifeStory ran for " << (int)Time::Total << " seconds" << endl;
         }
         void Play() {
             Init();

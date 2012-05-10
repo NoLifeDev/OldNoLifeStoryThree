@@ -18,15 +18,15 @@
 //////////////////////////////////////////////////////////////////////////
 
 namespace NLS {
-    class Sprite {
-    public:
-        class Data;
-        static void Create(MapFile&, class Node, uint32_t);
-        static vector<Sprite> All;
-        static void Init();
-        static void Unload();
-        void Draw(double x, double y);
-    private:
-        Data* data;
-    };
+    namespace Map {
+        class Layer {
+        public:
+            vector<Tile*> Tiles;
+            vector<Obj*> Objs;
+        };
+        extern array<Layer, 8> Layers;
+        void Init();
+        void Loop();
+        bool Load(string id, string portal = "sp");
+    }
 }

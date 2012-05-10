@@ -26,6 +26,7 @@ namespace NLS {
         Node operator[] (const char*) const;
         Node operator[] (char*) const;
         Node operator[] (int) const;
+        Node operator[] (const Node&) const;
         string Name() const;
         operator bool() const;
         operator string() const;

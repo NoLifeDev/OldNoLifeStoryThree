@@ -18,15 +18,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 namespace NLS {
-    class Sprite {
+    class AniSprite {
     public:
-        class Data;
-        static void Create(MapFile&, class Node, uint32_t);
-        static vector<Sprite> All;
-        static void Init();
-        static void Unload();
+        void operator=(const Node&);
         void Draw(double x, double y);
-    private:
-        Data* data;
+        Node n;
+        int frame;
+        double delay;
     };
 }

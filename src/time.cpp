@@ -25,15 +25,16 @@ namespace NLS {
         double FPS = 0;
         steady_clock Clock;
         steady_clock::time_point Last;
+        steady_clock::time_point Start;
         void Init() {
-            Last = Clock.now();
+            Start = Clock.now();
+            Last = Start;
         }
         void Loop() {
             //sleep_until(Last + milliseconds(8));
             steady_clock::time_point Now = Clock.now();
-            steady_clock::duration dif = Now - Last;
-            Delta = duration_cast<duration<double, ratio<1, 1>>>(dif).count();
-            Total = duration_cast<duration<double, ratio<1, 1>>>(Now.time_since_epoch()).count();
+            Delta = duration_cast<duration<double, ratio<1, 1>>>(Now-Last).count();
+            Total = duration_cast<duration<double, ratio<1, 1>>>(Now-Start).count();
             double fd = min(1., Delta*10);
             FPS = fd/max(Delta, 0.0001) + (1-fd)*FPS;
             Last = Now;

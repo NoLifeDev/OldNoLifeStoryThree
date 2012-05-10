@@ -60,27 +60,27 @@
 #include <bass.h>
 
 //C Standard Library
-//#include <cassert>
-//#include <ccomplex>
-//#include <cctype>
-//#include <cerrno>
-//#include <cfloat>
-//#include <chrono>
-//#include <ciso646>
-//#include <climits>
-//#include <clocale>
-//#include <cmath>
-//#include <csetjmp>
-//#include <csignal>
-//#include <cstdarg>
-//#include <cstddef>
-//#include <cstdint>
-//#include <cstdio>
-//#include <cstdlib>
-//#include <cstring>
-//#include <ctime>
-//#include <cwchar>
-//#include <cwctype>
+#include <cassert>
+#include <ccomplex>
+#include <cctype>
+#include <cerrno>
+#include <cfloat>
+#include <chrono>
+#include <ciso646>
+#include <climits>
+#include <clocale>
+#include <cmath>
+#include <csetjmp>
+#include <csignal>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <cwchar>
+#include <cwctype>
 
 //C++ Standard Library
 #include <algorithm>
@@ -168,5 +168,10 @@ static_assert(sizeof(wchar_t) == 2, "Unsupported wchar_t size");
 #include "Crypto.h"
 #include "Node.h"
 #include "WZ.h"
+#include "AniSprite.h"
 #include "Img.h"
 #include "Network.h"
+#include "Tile.h"
+#include "Obj.h"
+#include "Map.h"
+#include "View.h"

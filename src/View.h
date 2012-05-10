@@ -18,15 +18,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 namespace NLS {
-    class Sprite {
-    public:
-        class Data;
-        static void Create(MapFile&, class Node, uint32_t);
-        static vector<Sprite> All;
-        static void Init();
-        static void Unload();
-        void Draw(double x, double y);
-    private:
-        Data* data;
-    };
+    namespace View {
+        void Update();
+        extern int x, y;
+    }
 }
