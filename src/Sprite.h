@@ -22,10 +22,10 @@ namespace NLS {
     public:
         class Data;
         static void Create(MapFile&, class Node, uint32_t);
-        static vector<Sprite> All;
         static void Init();
         static void Unload();
-        void Draw(double x, double y);
+        static Sprite Blank();
+        void Draw(int x, int y, bool flipped = false, double alpha = 1, double ang = 0, int horz = -1, int vert = -1);
     private:
         Data* data;
     };

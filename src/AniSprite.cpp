@@ -24,23 +24,25 @@ namespace NLS {
         frame = 0;
         delay = 0;
     }
-    void AniSprite::Draw(double x, double y) {
+    void AniSprite::Draw(int x, int y, bool flipped, double alpha, double ang, int horz, int vert) {
         Node fn = n[frame];
-        delay += Time::Delta*1000;
-        double d = fn["delay"];
-        if (!d) d = 100;
-        if (delay > d) {
-            ++frame;
-            delay -= d;
-            fn = n[frame];
-            if (!fn) {
-                frame = 0;
-                fn = n[frame];
-            }
-            d = fn["delay"];
+        if (fn) {
+            delay += Time::Delta*1000;
+            double d = fn["delay"];
             if (!d) d = 100;
-        }
+            if (delay > d) {
+                ++frame;
+                delay -= d;
+                fn = n[frame];
+                if (!fn) {
+                    frame = 0;
+                    fn = n[frame];
+                }
+                d = fn["delay"];
+                if (!d) d = 100;
+            }
+        } else fn = n;
         Sprite s = fn;
-        s.Draw(x, y);
+        s.Draw(x, y, flipped, alpha, ang, horz, vert);
     }
 }

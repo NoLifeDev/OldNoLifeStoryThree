@@ -22,10 +22,16 @@ namespace NLS {
     namespace Graphics {
         sf::Window* Window;
         void Init() {
-            Window = new sf::Window(sf::VideoMode(800, 600), "NoLifeStory", sf::Style::Close, sf::ContextSettings(0, 0, 0, 2, 1));
+#ifdef _DEBUG
+            Window = new sf::Window(sf::VideoMode(1440, 900), "NoLifeStory", sf::Style::Close, sf::ContextSettings(0, 0, 0, 2, 1));
+#else
+            Window = new sf::Window(sf::VideoMode::getFullscreenModes()[0], "NoLifeStory", sf::Style::Close|sf::Style::Fullscreen, sf::ContextSettings(0, 0, 0, 2, 1));
+#endif
             Window->setKeyRepeatEnabled(true);
             Window->setMouseCursorVisible(false);
-            Window->setVerticalSyncEnabled(false);
+            Window->setVerticalSyncEnabled(true);
+            View::Width = Window->getSize().x;
+            View::Height = Window->getSize().y;
             HANDLE hIcon = LoadIconW(GetModuleHandleW(NULL), MAKEINTRESOURCEW(IDI_NOLIFESTORY_ICON));
 	        HWND hWnd = Window->getSystemHandle();
             SendMessage(hWnd, WM_SETICON, ICON_SMALL2, (LPARAM)hIcon);
@@ -36,7 +42,7 @@ namespace NLS {
             Window->display();
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
-            glOrtho(0, 800, 600, 0, -1, 1);
+            glOrtho(0, View::Width, View::Height, 0, -1, 1);
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
             glEnable(GL_TEXTURE_2D);
@@ -45,11 +51,19 @@ namespace NLS {
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glEnable(GL_VERTEX_ARRAY);
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            //glEnable(GL_COLOR_LOGIC_OP);
-            //glLogicOp(GL_XOR);
             Sprite::Init();
         }
         void Loop() {
+            glEnable(GL_COLOR_LOGIC_OP);
+            glLogicOp(GL_XOR);
+            glLoadIdentity();
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glBegin(GL_LINE_STRIP);
+            for (int i = 0; i < View::Width; ++i) {
+                glVertex2d(i, View::Height-Time::Deltas[i]*1000);
+            }
+            glEnd();
+            glDisable(GL_COLOR_LOGIC_OP);
             Window->setTitle(string("class NoLifeStory {int fps = "+to_string((int)Time::FPS)+";};"));
             sf::Event e;
             while (Window->pollEvent(e)) {
@@ -69,17 +83,6 @@ namespace NLS {
             }
             Window->display();
             glColor4f(1, 1, 1, 1);
-            //{
-            //    static mt19937 engine;
-            //    static uniform_real_distribution<double> dist(0, 0.6);
-            //    double d = Time::Total*2.08;
-            //    engine.seed(d);
-            //    double r = dist(engine);
-            //    double g = dist(engine);
-            //    double b = dist(engine);
-            //    glClearColor(r, g, b, 1);
-            //    glColor4f(1-r, 1-g, 1-b, 1);
-            //}
             glClear(GL_COLOR_BUFFER_BIT);
             View::Update();
         }

@@ -24,7 +24,10 @@ namespace NLS {
             vector<Tile*> Tiles;
             vector<Obj*> Objs;
         };
+        extern vector<Back*> Backgrounds;
+        extern vector<Back*> Foregrounds;
         extern array<Layer, 8> Layers;
+        extern int Counter;
         void Init();
         void Loop();
         bool Load(string id, string portal = "sp");

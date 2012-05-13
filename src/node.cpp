@@ -30,7 +30,7 @@ namespace NLS {
         char* name;
         Data* children;
         uint16_t num;
-        enum Type : uint8_t {
+        enum Type : uint16_t {
             none,
             dreal,
             ireal,
@@ -123,9 +123,9 @@ namespace NLS {
         else return 0;
     }
     Node::operator Sprite() const {
-        if (!data) return Sprite();
+        if (!data) return Sprite::Blank();
         if (data->type == Data::png) return data->value.png;
-        else return Sprite();
+        else return Sprite::Blank();
     }
     /*Node::operator Sprite() const {
     if (!data) return Sprite();
@@ -186,7 +186,7 @@ namespace NLS {
                 if (!nn) break;
                 nn = nn[parts[i]];
             }
-            if (nn) data = nn.data;
+            if (nn) *data = *nn.data;
         } else {
 			for (Node n = begin(); n != end(); ++n) {
                 Node nn = n;

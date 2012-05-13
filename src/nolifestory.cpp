@@ -19,6 +19,5 @@
 #include "Global.h"
 
 int main(int argc, char** argv) {
-    freopen("log.txt", "w", stdout);
     NLS::Game::Play();
 }

@@ -14,6 +14,7 @@
     <ClInclude Include="res\Resource.h" />
     <ClInclude Include="src\AES.h" />
     <ClInclude Include="src\AniSprite.h" />
+    <ClInclude Include="src\Back.h" />
     <ClInclude Include="src\Crypto.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Global.h" />
@@ -36,6 +37,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\AniSprite.cpp" />
+    <ClCompile Include="src\Back.cpp" />
     <ClCompile Include="src\Crypto.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
@@ -113,7 +115,7 @@
       <PrecompiledHeaderFile>Global.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>bass.lib;glewd.lib;zlibd.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;sfml-window-s-d.lib;sfml-network-s-d.lib;sfml-system-s-d.lib;sfml-main-d.lib;glu32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -137,7 +139,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>

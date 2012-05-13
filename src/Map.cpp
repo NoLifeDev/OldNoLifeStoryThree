@@ -21,10 +21,13 @@
 namespace NLS {
     namespace Map {
         array<Layer, 8> Layers;
+        vector<Back*> Backgrounds;
+        vector<Back*> Foregrounds;
         string CurName;
         Node Next;
         Node Current;
-        void Load() {        
+        int Counter = 0;
+        void Load() {
             Current = Next;
             Next = Node();
             Sprite::Unload();
@@ -34,6 +37,10 @@ namespace NLS {
                 for (Obj* o : l.Objs) delete o;
                 l.Objs.clear();
             }
+            for (Back* b : Backgrounds) delete b;
+            Backgrounds.clear();
+            for (Back* b : Foregrounds) delete b;
+            Foregrounds.clear();
             for (int i = 0; i < 8; ++i) {
                 Layer& l = Layers[i];
                 Node ln = Current[i];
@@ -43,32 +50,39 @@ namespace NLS {
                 for (Node on : ln["obj"]) l.Objs.push_back(new Obj(on));
                 sort(l.Objs.begin(), l.Objs.end(), [](Obj* o1, Obj* o2){return o1->z < o2->z;});
             }
+            for (Node bn : Current["back"]) {
+                if ((int)bn["front"]) Foregrounds.push_back(new Back(bn));
+                else Backgrounds.push_back(new Back(bn));
+            }
         }
         vector<string> ToLoad;
         void Init() {
-            Node n1 = Base["Map"]["Map"];
-            for (int i = 0; i < 10; ++i) {
-                Node n2 = n1["Map"+to_string(i)];
-                for (Node n3 : n2) {
-                    ToLoad.push_back(n3.Name());
-                }
-            }
+            //Node n1 = Base["Map"]["Map"];
+            //for (int i = 0; i < 10; ++i) {
+            //    Node n2 = n1["Map"+to_string(i)];
+            //    for (Node n3 : n2) {
+            //        ToLoad.push_back(n3.Name());
+            //    }
+            //}
             Load("100000000");
             Load();
         }
         void Loop() {
-            if (ToLoad.empty()) {
-                Game::Over = true;
-                return;
-            }
-            string id = ToLoad.back();
-            ToLoad.pop_back();
-            Load(id, "");
+            //if (ToLoad.empty()) {
+            //    Game::Over = true;
+            //    return;
+            //}
+            //string id = ToLoad.back();
+            //ToLoad.pop_back();
+            //Load(id, "");
+            //Counter = ToLoad.size();
             if (Next) Load();
+            for (Back* b : Backgrounds) b->Draw();
             for (Layer& l : Layers) {
                 for (Obj* o : l.Objs) o->Draw();
                 for (Tile* t : l.Tiles) t->Draw();
             }
+            for (Back* b : Foregrounds) b->Draw();
         }
         bool Load(string id, string portal) {
             id.insert(0, 9-id.size(), '0');

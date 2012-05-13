@@ -18,12 +18,15 @@
 //////////////////////////////////////////////////////////////////////////
 
 namespace NLS {
-    class AniSprite {
+    class Back {
     public:
-        void operator=(const Node&);
-        void Draw(int x, int y, bool flipped = false, double alpha = 1, double ang = 0, int horz = -1, int vert = -1);
-        Node n;
-        int frame;
-        double delay;
+        Back(Node n);
+        void Draw();
+    private:
+        int x, y;
+        int rx, ry;
+        int cx, cy;
+        int type;
+        AniSprite spr;
     };
 }

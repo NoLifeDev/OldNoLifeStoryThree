@@ -20,6 +20,9 @@
 namespace NLS {
     namespace View {
         void Update();
-        extern int x, y;
+        extern int X, Y;
+        extern int CX, CY;
+        extern int Width;
+        extern int Height;
     }
 }

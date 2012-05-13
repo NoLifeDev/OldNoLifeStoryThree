@@ -19,7 +19,6 @@
 #include "Global.h"
 
 namespace NLS {
-    vector<Sprite> Sprite::All;
     vector<Sprite::Data*> Loaded;
     class Sprite::Data {
     public:
@@ -100,6 +99,11 @@ namespace NLS {
         MapFile file;
         uint8_t format2;
     };
+    Sprite Sprite::Blank() {
+        Sprite s;
+        s.data = nullptr;
+        return s;
+    }
     void Sprite::Unload() {
         for (Data* d : Loaded) {
             glDeleteTextures(1, &d->texture);
@@ -124,21 +128,45 @@ namespace NLS {
         Sprite s;
         s.data = data;
         n.Set(s);
-        All.push_back(s);
     }
     GLuint vbo;
-    void Sprite::Draw(double x, double y) {
+    hash<Sprite::Data*> h;
+    void Sprite::Draw(int x, int y, bool flipped, double alpha, double ang, int horz, int vert) {
         if (!data) return;
         if (!data->texture) data->Parse();
-        glPushMatrix();
-        glTranslated(x, y, 0);
-        glTranslated(-data->originx, -data->originy, 0);
-        glScaled(data->width, data->height, 1);
         glBindTexture(GL_TEXTURE_2D, data->texture);
         glVertexPointer(2, GL_SHORT, 0, 0);
         glTexCoordPointer(2, GL_SHORT, 0, 0);
-        glDrawArrays(GL_QUADS, 0, 4);
-        glPopMatrix();
+        glColor4d(1, 1, 1, alpha);
+        auto Single = [&](double x, double y) {
+            glPushMatrix();
+            glTranslated(x, y, 0);
+            glRotated(ang, 0, 0, 1);
+            glTranslated(-data->originx, -data->originy, 0);
+            glScaled(data->width, data->height, 1);
+            if (flipped) glScaled(-1, 1, 1);
+            glDrawArrays(GL_QUADS, 0, 4);
+            glPopMatrix();
+        };
+        if (!horz) horz = data->width;
+        if (!vert) vert = data->height;
+        if (horz < 0 && vert < 0) {
+            Single(x, y);
+        } else if (horz < 0) {
+            for (int iy = (y+data->originy-View::Y)%vert-data->originy+View::Y-vert; iy-data->originy<View::Y+View::Height; iy += vert) {
+                Single(x, iy);
+            }
+        } else if (vert < 0) {
+            for (int ix = (x+data->originx-View::X)%horz-data->originx+View::X-horz; ix-data->originx<View::X+View::Width; ix += horz) {
+                Single(ix, y);
+            }
+        } else {
+            for (int iy = (y+data->originy-View::Y)%vert-data->originy+View::Y-vert; iy-data->originy<View::Y+View::Height; iy += vert) {
+                for (int ix = (x+data->originx-View::X)%horz-data->originx+View::X-horz; ix-data->originx<View::X+View::Width; ix += horz) {
+                    Single(ix, iy);
+                }
+            }
+        }
     }
     void Sprite::Init() {
         glGenBuffers(1, &vbo);

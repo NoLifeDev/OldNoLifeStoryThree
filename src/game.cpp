@@ -25,7 +25,7 @@ namespace NLS {
             Network::Init();
             Graphics::Init();
             WZ::AddPath("");
-            WZ::AddPath("C:/Nexon/MapleStory");
+            WZ::AddPath("C:/Nexon/MapleKorea 212");
             WZ::Init(true);
             Map::Init();
             Time::Init();

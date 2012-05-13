@@ -20,7 +20,10 @@
 
 namespace NLS {
     namespace View {
-        int x, y;
+        int Width;
+        int Height;
+        int X, Y;
+        int CX, CY;
         double vx = 0, vy = 0;
         double tx = 0, ty = 0;
         void Update() {
@@ -35,12 +38,13 @@ namespace NLS {
             double dy = ty-vy;
             vx += dx*c2;
             vy += dy*c2;
-            vx += c3*((double)rand()/RAND_MAX-0.5);
-            vy += c3*((double)rand()/RAND_MAX-0.5);
-            x = vx;
-            y = vy;
+            CX = vx;
+            CY = vy;
+            X = CX-Width/2;
+            Y = CY-Height/2;
             glLoadIdentity();
-            glTranslatef(-x, -y, 0);
+            glTranslated(-X, -Y, 0);
+            
         }
     }
 }
