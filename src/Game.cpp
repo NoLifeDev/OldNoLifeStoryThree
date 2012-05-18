@@ -18,6 +18,32 @@
 //////////////////////////////////////////////////////////////////////////
 #include "Global.h"
 
-int main(int argc, char** argv) {
-    NLS::Game::Play();
+namespace NLS {
+    namespace Game {
+        bool Over = false;
+        void Init() {
+            freopen("log.log", "w", stdout);
+            Graphics::Init();
+            Sound::Init();
+            WZ::AddPath("");
+            WZ::AddPath("..");
+            WZ::Init();
+            Network::Init();
+            Map::Init();
+            Time::Init();
+        }
+        void Loop() {
+            Time::Loop();
+            Network::Loop();
+            Graphics::Loop();
+            Map::Loop();
+        }
+        void Unload() {
+        }
+        void Play() {
+            Init();
+            while (!Over) Loop();
+            Unload();
+        }
+    }
 }

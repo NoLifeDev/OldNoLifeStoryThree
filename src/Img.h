@@ -15,25 +15,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 namespace NLS {
-    class MP3Property {
-    public:
-        MP3Property(MapFile& file, Node n, uint32_t off);
-        void Play(bool loop);
-        void Stop();
-    private:
-        int32_t len;
-        void* data;
-        uint32_t offset;
-        MapFile file;
-        HSTREAM stream;
-    };
     class Img {
     public:
-        static vector<Img*> All;
-        static bool Lazy;
         Img(MapFile file, Node n, uint32_t size, uint32_t offset) : file(file), n(n), size(size), offset(offset) {
-            if (!Lazy) All.push_back(this);
-            else n.Set(this);
+            n.Set(this);
         }
         void Parse();
     private:

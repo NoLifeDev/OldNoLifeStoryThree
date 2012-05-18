@@ -24,7 +24,7 @@ namespace NLS {
             char* string;
             Img* img;
 			Sprite png;
-            MP3Property* mp3;
+            Sound mp3;
         } value;
         Data* parent;
         char* name;
@@ -127,14 +127,11 @@ namespace NLS {
         if (data->type == Data::png) return data->value.png;
         else return Sprite::Blank();
     }
-    /*Node::operator Sprite() const {
-    if (!data) return Sprite();
-    return data->sprite;
-    }
     Node::operator Sound() const {
-    if (!data) return Sound();
-    return data->sound;
-    }*/
+        if (!data) return Sound::Blank();
+        if (data->type == Data::mp3) return data->value.mp3;
+        else return Sound::Blank();
+    }
     void Node::Set(char* v) {
         if (!v) v = AllocString(1);
         data->value.string = v;
@@ -156,7 +153,7 @@ namespace NLS {
 		data->value.png = v;
 		data->type = Data::png;
     }
-    void Node::Set(MP3Property* v) {
+    void Node::Set(Sound v) {
         data->value.mp3 = v;
         data->type = Data::mp3;
     }
@@ -164,7 +161,6 @@ namespace NLS {
         data->value.img = img;
         data->type = Data::img;
     }
-
     void Node::Resolve() {
         if (!data) return;
         if (data->type == Data::uol) {
@@ -194,7 +190,6 @@ namespace NLS {
             }
         }
     }
-
     void Node::Reserve(int n) {
         static Data* d = nullptr;
         static int remain = 0;
@@ -207,7 +202,6 @@ namespace NLS {
         d += n;
         data->num = n;
     }
-
     Node Node::begin() const {
         if (!data) return nullptr;
         if (data->type == Data::img) {
@@ -216,7 +210,6 @@ namespace NLS {
         }
         return data->children;
     }
-
     Node Node::end() const {
         if (!data) return nullptr;
         if (data->type == Data::img) {
@@ -225,25 +218,20 @@ namespace NLS {
         }
         return data->children + data->num;
     }
-
     Node& Node::operator++() {
         ++data;
         return *this;
     }
-
     Node& Node::operator--() {
         --data;
         return *this;
     }
-
     bool Node::operator==(const Node& other) const {
         return data == other.data;
     }
-
     bool Node::operator!=(const Node& other) const {
         return data != other.data;
     }
-
     Node& Node::operator*() {
         return *this;
     }

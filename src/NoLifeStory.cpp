@@ -16,16 +16,11 @@
 // You should have received a copy of the GNU General Public License    //
 // along with NoLifeStory.  If not, see <http://www.gnu.org/licenses/>. //
 //////////////////////////////////////////////////////////////////////////
+#include "Global.h"
 
-namespace NLS {
-    extern uint8_t *Key;
-    extern uint8_t *AKey;
-    extern uint16_t *WKey;
-    extern int16_t EncVersion;
-    extern uint32_t VersionHash;
-    extern uint8_t Keys[3][0x10000];
-    extern uint8_t AKeys[3][0x10000];
-    extern uint16_t WKeys[3][0x8000];
-    const uint32_t OffsetKey = 0x581C3F6D;
-    void GenKeys();
+int main(int argc, char** argv) {
+    BOOL is64;
+    IsWow64Process(GetCurrentProcess(), &is64);
+    if (is64 && exists(path("x64/NoLifeStory.exe"))) system("x64\\NoLifeStory.exe");
+    else NLS::Game::Play();
 }

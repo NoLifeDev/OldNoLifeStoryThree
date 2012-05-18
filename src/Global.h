@@ -163,6 +163,7 @@ static_assert(sizeof(wchar_t) == 2, "Unsupported wchar_t size");
 #include "MapFile.h"
 #include "Game.h"
 #include "Sprite.h"
+#include "Sound.h"
 #include "Graphics.h"
 #include "Crypto.h"
 #include "Node.h"
@@ -176,3 +177,4 @@ static_assert(sizeof(wchar_t) == 2, "Unsupported wchar_t size");
 #include "Map.h"
 #include "View.h"
 #include "Time.h"
+#include "Text.h"

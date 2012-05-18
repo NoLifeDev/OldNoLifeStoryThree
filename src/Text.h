@@ -16,35 +16,18 @@
 // You should have received a copy of the GNU General Public License    //
 // along with NoLifeStory.  If not, see <http://www.gnu.org/licenses/>. //
 //////////////////////////////////////////////////////////////////////////
-#include "Global.h"
 
 namespace NLS {
-    namespace View {
-        int Width, Height;
-        int X, Y;
-        int CX, CY;
-        int Left, Right, Top, Bottom;
-        double vx = 0, vy = 0;
-        double tx = 0, ty = 0;
-        void Update() {
-            double c1 = Time::Delta*1000;
-            double c2 = Time::Delta*3;
-            double c3 = 10;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) tx -= c1;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) tx += c1;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) ty -= c1;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) ty += c1;
-            double dx = tx-vx;
-            double dy = ty-vy;
-            vx += dx*c2;
-            vy += dy*c2;
-            CX = vx;
-            CY = vy;
-            X = CX-Width/2;
-            Y = CY-Height/2;
-            glLoadIdentity();
-            glTranslated(-X, -Y, 0);
-            
-        }
-    }
+    class Text {
+    public:
+        static void Init();
+        Text();
+        ~Text();
+        void Set(string);
+        void Set(u16string);
+        void Draw(int x, int y);
+    private:
+        GLuint tex;
+        int w;
+    };
 }

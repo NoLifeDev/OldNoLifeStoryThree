@@ -22,7 +22,7 @@ namespace NLS {
         void Update();
         extern int X, Y;
         extern int CX, CY;
-        extern int Width;
-        extern int Height;
+        extern int Width, Height;
+        extern int Left, Right, Top, Bottom;
     }
 }

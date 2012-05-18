@@ -142,3 +142,13 @@ UpgradeLog*.XML
 
 # NuGet
 packages/
+
+# Other
+*.txt
+*.wz
+*.bat
+*.hex
+*.wz
+*.7z
+*.zip
+*.rar

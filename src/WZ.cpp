@@ -140,16 +140,11 @@ namespace NLS {
     void Load(string name) {
         Base.InitTop(name);
         new File(Base);
-        if (!Img::Lazy) {
-            for (Img* img : Img::All) img->Parse();
-            Base.Resolve();
-        }
     }
     namespace WZ {
         uint16_t Version;
-        void Init(bool lazy) {
+        void Init() {
             GenKeys();
-            Img::Lazy = lazy;
             for (path p : Paths) {
                 Path = p;
                 if (exists(Path/path("Data.wz"))) {

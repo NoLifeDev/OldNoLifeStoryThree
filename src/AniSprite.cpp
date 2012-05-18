@@ -21,12 +21,13 @@
 namespace NLS {
     void AniSprite::operator=(const Node& other) {
         n = other;
+        fn = n["0"];
+        if (!fn) fn = n;
         frame = 0;
         delay = 0;
     }
     void AniSprite::Draw(int x, int y, bool flipped, double alpha, double ang, int horz, int vert) {
-        Node fn = n[frame];
-        if (fn) {
+        if (fn != n) {
             delay += Time::Delta*1000;
             double d = fn["delay"];
             if (!d) d = 100;
@@ -41,7 +42,7 @@ namespace NLS {
                 d = fn["delay"];
                 if (!d) d = 100;
             }
-        } else fn = n;
+        }
         Sprite s = fn;
         s.Draw(x, y, flipped, alpha, ang, horz, vert);
     }

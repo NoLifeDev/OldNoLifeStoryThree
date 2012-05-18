@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////
 // Copyright 2012 Peter Atechian (Retep998)                             //
 //////////////////////////////////////////////////////////////////////////
 // This file is part of NoLifeStory.                                    //
@@ -27,9 +27,21 @@ namespace NLS {
         Node Next;
         Node Current;
         int Counter = 0;
+        Sound bgm = Sound::Blank();
+        Text text;
         void Load() {
+            text.Set("lolwut");
             Current = Next;
             Next = Node();
+            string bgms = Current["info"]["bgm"];
+            size_t p = bgms.find('/');
+            Sound nbgm = Base["Sound"][bgms.substr(0, p)][bgms.substr(p+1)];
+            if (nbgm == bgm);
+            else {
+                bgm.Stop();
+                bgm = nbgm;
+                bgm.Loop();
+            }
             Sprite::Unload();
             for (Layer& l : Layers) {
                 for (Tile* t : l.Tiles) delete t;
@@ -54,28 +66,28 @@ namespace NLS {
                 if ((int)bn["front"]) Foregrounds.push_back(new Back(bn));
                 else Backgrounds.push_back(new Back(bn));
             }
+            if (Current["info"]["VRTop"]) {
+                View::Top = Current["info"]["VRTop"];
+                View::Bottom = Current["info"]["VRBottom"];
+                View::Left = Current["info"]["VRLeft"];
+                View::Right = Current["info"]["VRRight"];
+            } else {
+                View::Top = 0x10000;
+                View::Bottom = -0x10000;
+                View::Left = 0x10000;
+                View::Right = -0x10000;
+                //for (Foothold* f : Footholds) {}
+                View::Top -= 0x200;
+                View::Bottom += 0x80;
+            }
+
         }
         vector<string> ToLoad;
         void Init() {
-            //Node n1 = Base["Map"]["Map"];
-            //for (int i = 0; i < 10; ++i) {
-            //    Node n2 = n1["Map"+to_string(i)];
-            //    for (Node n3 : n2) {
-            //        ToLoad.push_back(n3.Name());
-            //    }
-            //}
-            Load("100000000");
+            Load(Network::Online?"200000000":"100000000");
             Load();
         }
         void Loop() {
-            //if (ToLoad.empty()) {
-            //    Game::Over = true;
-            //    return;
-            //}
-            //string id = ToLoad.back();
-            //ToLoad.pop_back();
-            //Load(id, "");
-            //Counter = ToLoad.size();
             if (Next) Load();
             for (Back* b : Backgrounds) b->Draw();
             for (Layer& l : Layers) {
@@ -83,6 +95,7 @@ namespace NLS {
                 for (Tile* t : l.Tiles) t->Draw();
             }
             for (Back* b : Foregrounds) b->Draw();
+            text.Draw(View::CX, View::CY);
         }
         bool Load(string id, string portal) {
             id.insert(0, 9-id.size(), '0');

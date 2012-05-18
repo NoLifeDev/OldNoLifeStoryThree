@@ -21,7 +21,7 @@ namespace NLS {
     extern Node Base;
     namespace WZ {
         extern uint16_t Version;
-        void Init(bool lazy = true);
+        void Init();
         void AddPath(std::string);
     }
 }

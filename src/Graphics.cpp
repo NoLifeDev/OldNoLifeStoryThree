@@ -52,10 +52,12 @@ namespace NLS {
             glEnable(GL_VERTEX_ARRAY);
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
             Sprite::Init();
+            Text::Init();
         }
         void Loop() {
             glEnable(GL_COLOR_LOGIC_OP);
             glLogicOp(GL_XOR);
+            glColor4d(1, 1, 1, 1);
             glLoadIdentity();
             glBindTexture(GL_TEXTURE_2D, 0);
             glBegin(GL_LINE_STRIP);

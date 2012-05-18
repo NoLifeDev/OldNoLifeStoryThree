@@ -23,6 +23,7 @@ namespace NLS {
         void operator=(const Node&);
         void Draw(int x, int y, bool flipped = false, double alpha = 1, double ang = 0, int horz = -1, int vert = -1);
         Node n;
+        Node fn;
         int frame;
         double delay;
     };

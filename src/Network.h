@@ -19,6 +19,13 @@
 
 namespace NLS {
     namespace Network {
+        extern char SendIV[4];
+        extern char RecvIV[4];
+        extern bool Online;
+        extern uint16_t Version;
+        extern string Patch;
+        extern uint8_t Locale;
         void Init();
+        void Loop();
     }
 }

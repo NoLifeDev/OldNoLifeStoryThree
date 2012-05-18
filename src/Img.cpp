@@ -16,8 +16,6 @@
 #include "Global.h"
 
 namespace NLS {
-    vector<Img*> Img::All;
-    bool Img::Lazy;
     void Img::ExtendedProperty(Node n) {
         char* name = file.ReadTypeString();
         if (strcmp(name, "Property") == 0) {
@@ -40,7 +38,7 @@ namespace NLS {
             n.Reserve(ec);
             for (int i = 0; i < ec; ++i) ExtendedProperty(n.g(to_cstring(ec), i));
         } else if (strcmp(name, "Sound_DX8") == 0) {
-            new MP3Property(file, n, offset);
+            Sound::Create(file, n, offset);
         } else if (strcmp(name, "UOL") == 0) {
             file.Skip(1);
             n.SetUOL(file.ReadTypeString());
@@ -105,28 +103,8 @@ namespace NLS {
         uint16_t b = file.Read<uint16_t>();
         if (b != 0) die();
         SubProperty(n);
-        if (Lazy) n.Resolve();
+        n.Resolve();
         file.Unmap();
         delete this;
-    }
-    MP3Property::MP3Property(MapFile& file, Node n, uint32_t off) {
-        file.Skip(1);
-        len = file.ReadCInt();
-        file.ReadCInt();
-        offset = file.Tell()+off+82;
-        data = nullptr;
-        stream = 0;
-        //n.Set(Sound(this));
-        this->file = file;
-    }
-    void MP3Property::Play(bool loop) {
-        if (!data) {
-            file.Map(offset, len);
-            void* d = file.ReadBin(len);
-            data = malloc(len);
-            memcpy(data, d, len);
-        }
-        if (!stream) BASS_StreamCreateFile(true, data, 0, len, BASS_SAMPLE_FLOAT|(loop?BASS_SAMPLE_LOOP:0));
-
     }
 }
