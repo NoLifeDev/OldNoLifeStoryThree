@@ -28,9 +28,9 @@ namespace NLS {
     GLfloat alpha[2] = {0, 1};
     void Text::Init() {
 #ifdef _M_X64
-        ifstream file("../Unifont.bin");
+        ifstream file("../Unifont.bin", ios::binary);
 #else
-        ifstream file("Unifont.bin");
+        ifstream file("Unifont.bin", ios::binary);
 #endif
         file.read((char*)full, 0x10000);
         file.read((char*)font, 0x200000);
@@ -42,6 +42,11 @@ namespace NLS {
     Text::Text() {
         tex = 0;
         w = 0;
+    }
+    Text::Text(Text&& other) {
+        tex = other.tex;
+        w = other.w;
+        other.tex = 0;
     }
     Text::~Text() {
         if (tex) glDeleteTextures(1, &tex);
@@ -59,11 +64,13 @@ namespace NLS {
             else w += 1;
         }
         for (int i = 0, j = 0; i < s.size(); ++i) {
-            char16_t c = s[i];
+            int c = s[i];
             bool f = full[c];
             for (int k = 0; k < 16; ++k) {
-                buf[j+k*w] = font[(c<<5)+(k<<1)];
-                if (f) buf[j+k*w+1] = font[(c<<5)+(k<<1)+1];
+                if (f) {
+                    buf[j+k*w+1] = font[(c<<5)+(k<<1)];
+                    buf[j+k*w] = font[(c<<5)+(k<<1)+1];
+                } else buf[j+k*w] = font[(c<<5)+(k<<1)];
             }
             if (f) j += 2;
             else  j += 1;
@@ -76,14 +83,14 @@ namespace NLS {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, 0x10, 0, GL_COLOR_INDEX, GL_BITMAP, buf);
     }
     void Text::Draw(int x, int y) {
-        glColor4d(0, 0, 0, 1);
         glBindTexture(GL_TEXTURE_2D, tex);
         glPushMatrix();
         glTranslated(x, y, 0);
         glScaled(w, 0x10, 1);
-        glVertexPointer(2, GL_SHORT, 0, 0);
-        glTexCoordPointer(2, GL_SHORT, 0, 0);
         glDrawArrays(GL_QUADS, 0, 4);
         glPopMatrix();
+    }
+    int Text::Width() {
+        return w;
     }
 }

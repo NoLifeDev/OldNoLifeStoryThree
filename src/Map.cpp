@@ -28,9 +28,7 @@ namespace NLS {
         Node Current;
         int Counter = 0;
         Sound bgm = Sound::Blank();
-        Text text;
         void Load() {
-            text.Set("lolwut");
             Current = Next;
             Next = Node();
             string bgms = Current["info"]["bgm"];
@@ -84,7 +82,7 @@ namespace NLS {
         }
         vector<string> ToLoad;
         void Init() {
-            Load(Network::Online?"200000000":"100000000");
+            Load("10000");
             Load();
         }
         void Loop() {
@@ -95,7 +93,6 @@ namespace NLS {
                 for (Tile* t : l.Tiles) t->Draw();
             }
             for (Back* b : Foregrounds) b->Draw();
-            text.Draw(View::CX, View::CY);
         }
         bool Load(string id, string portal) {
             id.insert(0, 9-id.size(), '0');

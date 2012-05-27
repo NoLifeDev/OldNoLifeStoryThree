@@ -27,5 +27,8 @@ namespace NLS {
         extern uint8_t Locale;
         void Init();
         void Loop();
+        namespace Send {
+            void Login(string user, string pass);
+        }
     }
 }

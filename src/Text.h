@@ -22,10 +22,12 @@ namespace NLS {
     public:
         static void Init();
         Text();
+        Text(Text&&);
         ~Text();
         void Set(string);
         void Set(u16string);
         void Draw(int x, int y);
+        int Width();
     private:
         GLuint tex;
         int w;

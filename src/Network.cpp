@@ -40,7 +40,8 @@ namespace NLS {
             HandShake = 0x14,
             Login = 0x15,
             Ping = 0x2E,
-            LoginScreen = 0x38
+            LoginScreen = 0x38,
+            RequestWorlds = 0x1F
         };
         template <typename T>
         T Read() {
@@ -69,17 +70,17 @@ namespace NLS {
         template <>
         void Write<OpCode>(OpCode op) {
             Write((uint16_t)op);
-            cout << "Sending packet: " << (uint16_t)op << endl;
         }
         void ConnectLogin() {
             Socket.setBlocking(true);
-            sf::Socket::Status err = Socket.connect("83.80.148.175", 8484, sf::seconds(1));
+            //sf::Socket::Status err = Socket.connect("83.80.148.175", 8484, sf::seconds(1));
+            sf::Socket::Status err = Socket.connect("96.11.243.156", 8484, sf::seconds(1));
             if (err != sf::Socket::Status::Done) {
                 Online = false;
-                cout << "Failed to connect to login server" << endl;
+                UI::Log("Failed to connect to login server");
                 return;
             }
-            cout << "Connected to login server" << endl;
+            UI::Log("Connected to login server");
             Socket.setBlocking(false);
             Online = true;
             handshake = true;
@@ -97,15 +98,16 @@ namespace NLS {
                 uint16_t a = (Network::SendIV[3]<<8)+Network::SendIV[2];
                 a ^= WZ::Version;
                 uint16_t b = a^(wbufp-4);
-                wbuf[0] = a&0xFF00;
-                wbuf[1] = a>>8;
-                wbuf[2] = b&0x00FF;
-                wbuf[3] = b>>8;
+                wbuf[0] = a&0xff;
+	            wbuf[1] = a>>8;
+	            wbuf[2] = b&0xff;
+	            wbuf[3] = b>>8;
                 Encrypt(wbuf+4, wbufp-4);
                 Socket.send(wbuf, wbufp);
                 wbufp = 4;
             }
             void HandShake() {
+                UI::Log("Shaking hands");
                 Write(OpCode::HandShake);
                 Write(Locale);
                 Write(Version);
@@ -113,24 +115,45 @@ namespace NLS {
                 Send();
             }
             void Ping() {
+                UI::Log("Ping!");
                 Write(OpCode::Ping);
                 Send();
             }
             void LoginScreen() {
+                UI::Log("Entering login screen");
                 Write(OpCode::LoginScreen);
                 Send();
             }
             void Login(string user, string pass) {
+                UI::Log("Logging in to "+user);
                 Write(OpCode::Login);
                 Write(user);
                 Write(pass);
+                Send();
+            }
+            void RequestWorlds() {
+                UI::Log("Requesting world list");
+                Write(OpCode::RequestWorlds);
                 Send();
             }
         }
         namespace Receive {
             void Ping() {
                 Send::Ping();
-                cout << "Ping!" << endl;
+            }
+            void LoginStatus() {
+                uint8_t s = Read<uint8_t>();
+                switch (s) {
+                case 0:
+                    UI::Log("Logged in");
+                    Send::RequestWorlds();
+                    break;
+                case 5:
+                    UI::Log("Incorrect username/password");
+                    break;
+                default:
+                    UI::Log("Unknown login status: "+to_string(s));
+                }
             }
         }
         void Loop() {
@@ -140,7 +163,7 @@ namespace NLS {
             rbufr += r;
             if (err != sf::Socket::Status::Done && err != sf::Socket::Status::NotReady) {
                 Online = false;
-                cout << "Disconnected" << endl;
+                UI::Log("Disconnected");
                 return;
             }
             if (rbufr < rbufs) return;
@@ -152,7 +175,6 @@ namespace NLS {
                     uint32_t b = Read<uint32_t>();
                     size = (b>>16)^b;
                 }
-                cout << "Packet size: " << size << endl;
                 rbufs = size;
                 rbufr = 0;
                 rbufp = 0;
@@ -160,29 +182,31 @@ namespace NLS {
                 return;
             }
             if (handshake) {
-                cout << "Received handshake" << endl;
                 Version = Read<uint16_t>();
-                cout << "Version: " << Version << endl;
                 Patch = Read<string>();
-                cout << "Patch: " << Patch << endl;
                 uint32_t siv = Read<uint32_t>();
-                cout << "SendIV: " << siv << endl;
 				uint32_t riv = Read<uint32_t>();
-                cout << "RecvIV: " << riv << endl;
                 Locale = Read<uint8_t>();
-                cout << "Locale: " << (int)Locale << endl;
+                UI::Log("Version: "+to_string(Version));
                 memcpy(SendIV, &siv, 4);
 				memcpy(RecvIV, &riv, 4);
                 handshake = false;
                 Send::HandShake();
                 Send::LoginScreen();
-                Send::Login("Testme", "testme");
             } else {
                 Decrypt(rbuf, rbufs);
+                for (int i = rbufs; i > 0; --i) {
+                    cout << hex << uppercase << setw(2) << setfill('0') << (int)Read<uint8_t>() << " ";
+                }
+                cout << endl;
+                rbufp = 0;
                 uint16_t opcode = Read<uint16_t>();
-                cout << "Received packet: " << opcode << endl;
                 switch (opcode) {
-                case 0x11: Receive::Ping; break;
+                case 0x0: Receive::LoginStatus(); break;
+                case 0x11: Receive::Ping(); break;
+                default:
+                    UI::Log("Unknown opcode: "+to_string(opcode));
+                    
                 }
             }
             rbufs = 4;

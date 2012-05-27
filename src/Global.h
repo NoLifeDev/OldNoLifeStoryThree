@@ -17,6 +17,7 @@
 // along with NoLifeStory.  If not, see <http://www.gnu.org/licenses/>. //
 //////////////////////////////////////////////////////////////////////////
 
+#pragma region Stuff
 #pragma region Platform
 #ifdef NLS_GLOBAL
 #error "Global.h was included more than once"
@@ -48,7 +49,6 @@
 
 //SFML
 #include <SFML/Config.hpp>
-#include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -158,6 +158,7 @@ static_assert(sizeof(wchar_t) == 2, "Unsupported wchar_t size");
 #endif
 
 #define die() throw(273)
+#pragma endregion
 
 #include "AES.h"
 #include "MapFile.h"
@@ -178,3 +179,4 @@ static_assert(sizeof(wchar_t) == 2, "Unsupported wchar_t size");
 #include "View.h"
 #include "Time.h"
 #include "Text.h"
+#include "UI.h"

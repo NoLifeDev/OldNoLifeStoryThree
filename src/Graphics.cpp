@@ -22,14 +22,11 @@ namespace NLS {
     namespace Graphics {
         sf::Window* Window;
         void Init() {
-#ifdef _DEBUG
             Window = new sf::Window(sf::VideoMode(1440, 900), "NoLifeStory", sf::Style::Close, sf::ContextSettings(0, 0, 0, 2, 1));
-#else
-            Window = new sf::Window(sf::VideoMode::getFullscreenModes()[0], "NoLifeStory", sf::Style::Close|sf::Style::Fullscreen, sf::ContextSettings(0, 0, 0, 2, 1));
-#endif
+            //Window = new sf::Window(sf::VideoMode::getFullscreenModes()[0], "NoLifeStory", sf::Style::Close|sf::Style::Fullscreen, sf::ContextSettings(0, 0, 0, 2, 1));
             Window->setKeyRepeatEnabled(true);
             Window->setMouseCursorVisible(false);
-            Window->setVerticalSyncEnabled(true);
+            Window->setVerticalSyncEnabled(false);
             View::Width = Window->getSize().x;
             View::Height = Window->getSize().y;
             HANDLE hIcon = LoadIconW(GetModuleHandleW(NULL), MAKEINTRESOURCEW(IDI_NOLIFESTORY_ICON));
@@ -55,18 +52,8 @@ namespace NLS {
             Text::Init();
         }
         void Loop() {
-            glEnable(GL_COLOR_LOGIC_OP);
-            glLogicOp(GL_XOR);
-            glColor4d(1, 1, 1, 1);
-            glLoadIdentity();
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glBegin(GL_LINE_STRIP);
-            for (int i = 0; i < View::Width; ++i) {
-                glVertex2d(i, View::Height-Time::Deltas[i]*1000);
-            }
-            glEnd();
-            glDisable(GL_COLOR_LOGIC_OP);
-            Window->setTitle(string("class NoLifeStory {int fps = "+to_string((int)Time::FPS)+";};"));
+            //Window->setTitle(string("class NoLifeStory {int fps = "+to_string((int)Time::FPS)+";};"));
+            Window->setTitle(string("class NoLifeStory {int fps = "+to_string((int)Time::FPS)+"; double jitter = "+to_string(Time::Jitter)+";};"));
             sf::Event e;
             while (Window->pollEvent(e)) {
                 switch (e.type) {
@@ -78,6 +65,9 @@ namespace NLS {
                     break;
                 case sf::Event::LostFocus:
                     //Mute
+                    break;
+                case sf::Event::TextEntered:
+                    UI::Key(e.text.unicode);
                     break;
                 default:
                     break;

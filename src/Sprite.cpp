@@ -133,6 +133,9 @@ namespace NLS {
     hash<Sprite::Data*> h;
     void Sprite::Draw(int x, int y, bool flipped, double alpha, double ang, int horz, int vert) {
         if (!data) return;
+        if (horz < 0 && vert < 0)
+        if (x+data->width-data->originx < View::X || x-data->originx > View::X+View::Width ||
+            y+data->height-data->originy < View::Y || y-data->originy > View::Y+View::Height) return;
         if (!data->texture) data->Parse();
         glBindTexture(GL_TEXTURE_2D, data->texture);
         glVertexPointer(2, GL_SHORT, 0, 0);
@@ -173,5 +176,7 @@ namespace NLS {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         GLushort data[] = {0, 0, 1, 0, 1, 1, 0, 1};
         glBufferData(GL_ARRAY_BUFFER, 16, data, GL_STATIC_DRAW);
+        glVertexPointer(2, GL_SHORT, 0, 0);
+        glTexCoordPointer(2, GL_SHORT, 0, 0);
     }
 }

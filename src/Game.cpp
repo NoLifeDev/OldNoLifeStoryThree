@@ -29,6 +29,7 @@ namespace NLS {
             WZ::AddPath("..");
             WZ::Init();
             Network::Init();
+            UI::Init();
             Map::Init();
             Time::Init();
         }
@@ -37,6 +38,7 @@ namespace NLS {
             Network::Loop();
             Graphics::Loop();
             Map::Loop();
+            UI::Loop();
         }
         void Unload() {
         }

@@ -22,6 +22,7 @@ namespace NLS {
         extern double Delta;
         extern double Total;
         extern double FPS;
+        extern double Jitter;
         extern vector<double> Deltas;
         void Init();
         void Loop();
